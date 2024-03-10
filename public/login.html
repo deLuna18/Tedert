@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html ng-app="myapp">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="assets/css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body ng-controller="loginController">
+    <div style="display: flex;  background-color: #ffffff;">
+        <div class="w3-mobile w3-container w3-padding w3-animate-top" style="width:40%;color: black; overflow: hidden;">
+            <div class="w3-card-4 w3-round-xlarge w3-container w3-padding padding-container" style="background-color: white; height: 100vh; box-shadow: 10px 0 20px rgba(0, 0, 0, 0.3); width: 100%;">
+                <div class="logo">
+					<br><br>	
+					<img src="logo.png" alt="" width="250px">
+					<br>
+				</div>
+				<div class="banner">
+					<h2 style="font-weight: bold; margin-top: -124px;">WELCOME STUDENTS!</h2>
+				</div>
+				<h3><span>USER LOGIN</span></h3>
+                <div class="username-input">
+                    <span class="fa fa-user"></span>
+                    <input type="text" ng-model="username" class="w3-input w3-border username-input-field" placeholder="USERNAME">
+                </div>
+
+                <div class="password-input">
+                    <span class="fa fa-lock"></span>
+                    <input type="password" ng-model="password" class="w3-input w3-border password-input-field" placeholder="PASSWORD">
+                </div>
+
+                <p class="w3-center">
+                    <b>{{ message }}</b>
+                </p>
+                <p>
+                    <button class="w3-right button-login" ng-click="login()" style="margin-top: 20px; font-size: 19px;">LOGIN</button>
+                </p>
+            </div>
+        </div>
+        <div class="image" style="flex: 1;">
+            <img src="school3.png" alt="" style="width: 100%; margin-top: 80px;">
+        </div>
+    </div>
+    <script src="assets/js/angular.min.js"></script>
+    <script src="assets/js/angular-route.min.js"></script>
+    <script src="assets/js/myapp.js"></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+.login-container {
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+}
+
+.w3-input {
+    margin-top: 30px;
+    padding: 10px;
+}
+
+.password-input, .username-input {
+    position: relative;
+}
+
+.username-input input,
+.password-input input {
+    padding-left: 40px;
+}
+
+.username-input span,
+.password-input span {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: black;
+}
+
+.button-login {
+    font-size: 20px;
+    border: 0.5px solid rgb(51, 50, 50);
+    border-radius: 5px;
+}
+
+.button-login:hover {
+    background-color: #04AA6D;
+}
+
+.banner{
+    margin: 90px 0 0 40px;
+}
+
+h3{
+    margin-top: 45px;
+    text-align: center;
+    position: relative;
+    z-index: 0;
+}
+
+h3::before,
+h3::after {
+  background-color: #000;
+  content: "";
+  display: inline-block;
+  height: 1px;
+  position: relative;
+  vertical-align: middle;
+  width: 35%;
+}
+
+h3::before {
+  right: 0.5em;
+  margin-left: -50%;
+}
+
+h3::after {
+  left: 0.5em;
+  margin-right: -50%;
+}
+
+.button-login {
+    padding: 10px;
+    height: 46px;
+    width: calc(100% - 0px); 
+    box-sizing: border-box; 
+    font-size: 15px;
+    border: 0.5px solid rgb(51, 50, 50);
+    border-radius: 5px;
+}
+
+.title {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background-color: rgba(124, 185, 255, 0.5); 
+    padding: 20px; 
+    margin-top: 20px;
+}
+
+.arrow {
+    margin-left: 5px;
+}
+
+.arrow-up::after {
+    content: " ↑";
+}
+
+.arrow-down::after {
+    content: " ↓";
+}
+
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+.pagination-buttons button {
+    animation: pulse 1s infinite;
+}
+
+.w3-button.w3-grey:hover {
+    border: 5px solid #030303; /* Change the color to your desired hover color */
+}
