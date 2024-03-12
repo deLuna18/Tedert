@@ -55,6 +55,7 @@ app.get("/studentlist",(req,res)=>{
 	res.status(200).send(slist);
 });
 
+//LOGIN
 app.post("/login", (req, res) => {
     const { username, password } = req.body;
     const user = users.find(user => user.username === username && user.password === password);
@@ -65,6 +66,7 @@ app.post("/login", (req, res) => {
     }
 });
 
+//SAVE
 app.post("/savestudent",(req,res)=>{
 	let idno = req.body.idno;
 	let lastname = req.body.lastname;
@@ -79,6 +81,31 @@ app.post("/savestudent",(req,res)=>{
 		'level':level,
 	});
 	res.status(200).send({'message':'New Student Added'});
+});
+
+//DELETE
+app.post("/deletestudent", (req, res) => {
+    const idno = req.body.idno; 
+    const index = slist.findIndex(student => student.idno === idno);
+    if (index !== -1) {
+        slist.splice(index, 1); 
+        res.status(200).send({ message: "Student deleted successfully" });
+    } else {
+        res.status(404).send({ message: "Student not found" });
+    }
+});
+
+
+//UPDATE
+app.post("/updatestudent", (req, res) => {
+    const updatedStudent = req.body;
+    const index = slist.findIndex(student => student.idno === updatedStudent.idno);
+    if (index !== -1) {
+        slist[index] = updatedStudent; 
+        res.status(200).send({ message: "Student updated successfully", updatedStudent: updatedStudent }); 
+    } else {
+        res.status(404).send({ message: "Student not found" });
+    }
 });
 
 app.get("/", (req, res) => {

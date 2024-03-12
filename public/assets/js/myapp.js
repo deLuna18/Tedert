@@ -21,6 +21,7 @@
 			.otherwise({ redirectTo: '/' });
 	});
 	
+	// MY LOGIN
 	app.controller("loginController", function($scope, $location, $rootScope, $http) {
 		$scope.login = function() {
 			var uname = $scope.username;
@@ -45,10 +46,14 @@
 				$scope.currentPage = 0
 				$scope.pageButtons = [];
 				
+				// MY LOGOUT
 				$scope.logout = function(){
-					$rootScope.logged = false;
-					$location.path("/");
-					$rootScope.message = " "; //LOGOUT
+					var confirmLogout = confirm("Are you sure you want to logout?");
+					if (confirmLogout) { 
+						$rootScope.logged = false;
+						$location.path("/");
+						$rootScope.message = " ";  
+					}
 				}
 				
 				$scope.courses= [
@@ -65,56 +70,53 @@
 					{'levelid':'3','levelname':'3rd year'},
 					{'levelid':'4','levelname':'4th year'},
 				];
-				//create a function to retrieve the data from app.js
 				$http({
 					'url': '/studentlist',
 					'method': 'get'
 				}).then(function (response) {
 					$scope.slist = response.data;
 					$scope.header = Object.keys($scope.slist[0]);
-					// Initialize page buttons
 					$scope.generatePageButtons();
 				});
+
+				// FUNCTION TO CALCULATE NUMBER OF PAGES
 				$scope.numberOfPages = function(){
 					return Math.ceil($scope.slist.length/$scope.pageSize);
 				}
 				
-				 // Show entries range message
-				 $scope.showingEntries = function () {
-					var start = $scope.currentPage * $scope.pageSize + 1;
-					var end = Math.min((($scope.currentPage + 1) * $scope.pageSize), $scope.totalEntries);
-					return "Showing " + start + " to " + end + " of " + $scope.totalEntries + " entries";
-				}
+				
+				//  $scope.showingEntries = function () {
+				// 	var start = $scope.currentPage * $scope.pageSize + 1;
+				// 	var end = Math.min((($scope.currentPage + 1) * $scope.pageSize), $scope.totalEntries);
+				// 	return "Showing " + start + " to " + end + " of " + $scope.totalEntries + " entries";
+				// }
 
 				$scope.changePage = function (pageIndex) {
-					// Calculate the total number of pages
 					var totalPages = $scope.numberOfPages();
 			
-					// Check if the requested page index is within bounds
 					if (pageIndex >= 0 && pageIndex < totalPages && pageIndex !== $scope.currentPage) {
-						// Update the current page
 						$scope.currentPage = pageIndex;
-						// Regenerate page buttons based on new current page
 						$scope.generatePageButtons();
 					}
 				};
 
 				$scope.setPageSize = function (size) {
 					$scope.pageSize = size;
-					$scope.currentPage = 0; // Reset to first page when changing page size
-					$scope.generatePageButtons(); // Regenerate page buttons based on new page size
+					$scope.currentPage = 0; 
+					$scope.generatePageButtons(); 
 				};
 
 				$scope.modalcontrol = function(modalname,control){
 					document.getElementById(modalname).style.display=control;
 				}
 				
+				// BUTTONS AT THE BUTTOM 1 , 2 ,3 ,4 ,5 ,6 ,7 
 				$scope.generatePageButtons = function () {
 					$scope.pageButtons = [];
 					var totalPages = $scope.numberOfPages();
-					var maxButtons = 7; // Maximum number of buttons to display
+					var maxButtons = 7; 
 				
-					// Determine the number of buttons to display
+					
 					var startPage = 1;
 					var endPage = totalPages;
 					if (totalPages > maxButtons) {
@@ -128,19 +130,21 @@
 						}
 					}
 				
-					// Generate the page buttons
+					
 					for (var i = startPage; i <= endPage; i++) {
 						$scope.pageButtons.push(i);
 					}
 				};
-				
+
+				// FOR CHANGES IN PAGE SIZE
 				$scope.$watch('pageSize', function(newPageSize, oldPageSize) {
 					if (newPageSize !== oldPageSize) {
-						$scope.currentPage = 0; // Reset to first page when changing page size
+						$scope.currentPage = 0;
 						$scope.generatePageButtons();
 					}
 				});
 				
+				// FOR SAVE BUTTON 
 				$scope.savestudent = function() {
 					$http({
 						'url': '/savestudent',
@@ -153,26 +157,20 @@
 							'level': $scope.level,
 						}
 					}).then(function(response) {
-						console.log(response.data); // Log the response data to see if it's successful
-						// Clear input fields after saving
+						console.log(response.data); 
 						$scope.idno = '';
 						$scope.lastname = '';
 						$scope.firstname = '';
 						$scope.course = '';
 						$scope.level = '';
-						// Close the modal
 						$scope.modalcontrol('studentmodal', 'none');
-						// Fetch the updated student list
 						$http({
 							'url': '/studentlist',
 							'method': 'get'
 						}).then(function(response) {
 							$scope.slist = response.data;
-							// Update total number of entries
 							$scope.totalEntries = $scope.slist.length;
-							// Recalculate current page
 							$scope.currentPage = Math.min($scope.currentPage, $scope.numberOfPages() - 1);
-							// Update page buttons and other necessary elements
 							$scope.generatePageButtons();
 						}).catch(function(error) {
 							console.error("Error fetching updated student list:", error);
@@ -182,6 +180,7 @@
 					});
 				}
 				
+				// SORTING ASCENDING ORDER AND DESCENDING ORDER
 				$scope.sortBy = function(column) {
 					if ($scope.sortColumn === column) {
 						$scope.reverseSort = !$scope.reverseSort;
@@ -189,7 +188,7 @@
 						$scope.sortColumn = column;
 						$scope.reverseSort = false;
 					}
-					// Implement custom sorting logic based on the column
+					
 					switch (column) {
 						case 'lastname':
 							$scope.slist.sort(function(a, b) {
@@ -237,12 +236,57 @@
 							});
 							break;
 						default:
-							// Do nothing if column is not recognized
+							
 							break;
 					}
 				};
+
+				//EDIT 
+				$scope.editStudent = function(student) {
+					$scope.editingStudent = angular.copy(student);
+					$scope.modalcontrol('editStudentModal', 'block');
+					$scope.editingStudent.courses = $scope.courses;
+					$scope.idno = $scope.editingStudent.idno;
+				};
+				
+				// UPDATE THE TABLE ONCE THE USER EDIT THE INFORMATION
+				$scope.updateStudent = function() {
+					$scope.editingStudent.idno = $scope.idno; 
+					$http({
+						'url': '/updatestudent',
+						'method': 'post',
+						'data': $scope.editingStudent
+					}).then(function(response) {
+						var index = $scope.slist.findIndex(student => student.idno === $scope.editingStudent.idno);
+						if (index !== -1) {
+							$scope.slist[index] = angular.copy($scope.editingStudent);
+							$scope.slist[index].idno = $scope.idno; 
+						}
+						$scope.modalcontrol('editStudentModal', 'none');
+					}).catch(function(error) {
+						console.error("Error:", error);
+					});
+				};
+
+				//DELETE
+				$scope.deleteStudent = function(student) {
+					var confirmDelete = confirm("Are you sure you want to delete this student?");
+					if (confirmDelete) {
+						$http({
+							'url': '/deletestudent',
+							'method': 'post',
+							'data': student
+						}).then(function(response) {
+							$scope.slist = $scope.slist.filter(s => s.idno !== student.idno);
+						}).catch(function(error) {
+							console.error("Error deleting student:", error);
+						});
+					}
+				};
+
 			});
-			//
+
+			// FILTER 
 			app.filter("startFrom",function(){
 				return function(input,start){
 					start =+ start;
